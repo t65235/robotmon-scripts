@@ -248,7 +248,7 @@ releaseImage(img);
 
 #### `bgrToGray(sourceImg)`
 
-Convert form bgr (3 channels) to gray (1 channel).
+轉換圖片從BGR格式（三通道）至灰階圖片（一通道）
 
 * `sourceImg` Number
 
@@ -263,18 +263,22 @@ releaseImage(gray);
 
 #### `absDiff(sourceImg, targetImg)`
 
-Same as OpenCV `adbdiff()`.
+等同於 OpenCV `adbdiff()`.
 
 * `sourceImg` Number
 * `targetImg` Number
 
-回傳值 `Number` - 圖片指標（以數字表示） of the difference
+回傳值 `Number` - 圖片指標（以數字表示），紀錄差值
 
 ```javascript
 var img1 = getScreenshot();
 sleep(100);
 var img2 = getScreenshot();
-var diff = absDiff(img1, img2); // in gray order
+var grayImg1 = bgrToGray(img1);
+var grayImg2 = bgrToGray(img2);
+var diff = absDiff(grayImg1, grayImg2); // 必須先轉為灰階
+releaseImage(grayImg1);
+releaseImage(grayImg2);
 releaseImage(img1);
 releaseImage(img2);
 releaseImage(diff);
@@ -282,7 +286,7 @@ releaseImage(diff);
 
 #### `threshold(sourceImg, thr, maxThr, code)`
 
-Same as OpenCV `threshold()`.
+等同於 OpenCV `threshold()`.
 
 * `sourceImg` Number
 * `thr` Float
@@ -293,7 +297,7 @@ Same as OpenCV `threshold()`.
 |---|---|
 |0|CV_THRES_BINARY|
 
-See more: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
+詳細資料: [OpenCV Types](https://github.com/opencv/opencv/blob/2.4/modules/imgproc/include/opencv2/imgproc/types_c.h)
 
 ```javascript
 keycode('MENU');
@@ -302,11 +306,14 @@ var img1 = getScreenshot();
 keycode('HOME');
 sleep(1000);
 var img2 = getScreenshot();
-var diff = absDiff(img1, img2); // in gray order
-threshold(diff, 100, 255); // set to 0 if <= 100, set to 255 if > 100
+var grayImg1 = bgrToGray(img1);
+var grayImg2 = bgrToGray(img2);
+var diff = absDiff(grayImg1, grayImg2); // 必須先轉為灰階
+threshold(diff, 100, 255); // 將圖片值（灰階）如果小於等於100設為0，大於100設為255
 var value = getImageColor(diff, 500, 200); // value => {r":255,"g":0,"b":0","a":0}
-console.log(value['r']); // current diff value is show on 'r'
-// 255
+console.log(value['r']); // 灰階資料將存在 r 的欄位中，g 與 b 將為 0
+releaseImage(grayImg1);
+releaseImage(grayImg2);
 releaseImage(img1);
 releaseImage(img2);
 releaseImage(diff);
@@ -314,9 +321,9 @@ releaseImage(diff);
 
 #### `eroid(sourceImg, width, height, x, y)`
 
-Same as OpenCV `eroid`.
+等同於 OpenCV `eroid`
 
-`width`, `height`, `x`, `y` is `getStructuringElement()` parameters.
+`width`, `height`, `x`, `y` 為 `getStructuringElement()` 的參數.
 
 * `sourceImg` Number
 * `width` Number
@@ -334,9 +341,9 @@ releaseImage(img);
 
 #### `dilate(sourceImg, width, height, x, y)`
 
-Same as OpenCV `dilate`.
+等同於 OpenCV `dilate`
 
-`width`, `height`, `x`, `y` is `getStructuringElement()` parameters.
+`width`, `height`, `x`, `y` 為 `getStructuringElement()` 參數.
 
 * `sourceImg` Number
 * `width` Number
@@ -354,7 +361,7 @@ releaseImage(img);
 
 #### `inRange(sourceImg, minB, minG, minR, minA, maxB, maxG, maxR, maxA)`
 
-Same as OpenCV `inRange + clone + mask`. Filter with range color and clone to new image.
+等同於 OpenCV `inRange + clone + mask`. Filter with range color and clone to new image.
 
 * `sourceImg` Number
 * `minB` Number
@@ -378,7 +385,7 @@ releaseImage(filteredImg);
 
 #### `outRange(sourceImg, minB, minG, minR, minA, maxB, maxG, maxR, maxA)`
 
-Same as OpenCV `inRange + clone + not + mask`. Filter without range color and clone to new image.
+等同於 OpenCV `inRange + clone + not + mask`. Filter without range color and clone to new image.
 
 * `sourceImg` Number
 * `minB` Number
@@ -402,7 +409,7 @@ releaseImage(filteredImg);
 
 #### `cloneWithMask(sourceImg, mask)`
 
-Same as OpenCV `copyTo`. Clone image with mask (only support 1 channel)
+等同於 OpenCV `copyTo`. Clone image with mask (only support 1 channel)
 
 * `sourceImg` Number
 * `mask` Number
@@ -424,7 +431,7 @@ releaseImage(diff);
 
 #### `houghCircles(sourceImg, method, dp, minDist, p1, p2, minR, maxR)`
 
-Same as OpenCV `houghCircles`. For finding circles.
+等同於 OpenCV `houghCircles`. For finding circles.
 
 * `sourceImg` Number
 * `method` Number (3 = CV_HOUGH_GRADIENT)
@@ -446,7 +453,7 @@ releaseImage(img);
 
 #### `canny(sourceImg, t1, t2, apertureSize)`
 
-Same as OpenCV `canny`
+等同於 OpenCV `canny`
 
 * `sourceImg` Number
 * `t1` Float
@@ -467,7 +474,7 @@ releaseImage(cannyImg);
 
 #### `findContours(cannyImgPtr, minArea, maxArea)`
 
-Same as OpenCV `findContours`.
+等同於 OpenCV `findContours`.
 
 * `cannyImgPtr` Number (Canny image as input)
 * `minArea` Float
@@ -566,7 +573,7 @@ releaseImage(cropImg);
 
 #### `findImages(sourceImg, targetImg, scoreLimit, resultCountLimit, withoutOverlap)`
 
-Same as `findImage()`, but find mulitple times.
+等同於 `findImage()`, but find mulitple times.
 
 * `sourceImg` Number
 * `targetImg` Number
@@ -798,7 +805,7 @@ The RBM library is an API wrapper of the Robotmon JavaScript APIs.
 |eventDelay|The delay milliseconds of the event.|
 |imageThreshold|The threshold of image recognition. Range from `0` to `1`.|
 |imageQuality|The compression level of the image. Range from `0` to `100`.|
-|resizeFactor|The resize ratio of the screenshot in user's environment. Same as `oriResizeFactor` is better. Range from `0` to `1`.|
+|resizeFactor|The resize ratio of the screenshot in user's environment. 等同於 `oriResizeFactor` is better. Range from `0` to `1`.|
 
 ### Using
 
