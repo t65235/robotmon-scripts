@@ -54,7 +54,7 @@
       "versionCode": 9,
       "description": "<div>自動刷 Youtuber 影片</div>",
       "packageName": "com.google.android.youtube",
-      "downloadURL": "https://github.com/r2-studio/robotmon-scripts/raw/master/scripts/com.test.smallmi/index.zip",
+      "downloadURL": "https://github.com/t65235/robotmon-scripts/raw/master/scripts/com.test.smallmi/index.zip",
       "dependencies": [
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/RBM-0.0.1.js",
         "https://github.com/r2-studio/robotmon-scripts/raw/master/libs/TaskController-0.0.1.js"
